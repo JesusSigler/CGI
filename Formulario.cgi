@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 #
 #PROGRAM: Create form CGI Program
 #
@@ -8,13 +8,15 @@
 #	Create by Jesus Sigler.
 #
 
-#-----------------------------------#
-#  1. Create a new Perl CGI object  #
-#-----------------------------------#
+#-------------------------------------------#
+#  1. Create a new Perl CGI object and Redis #
+#-------------------------------------------#
 
 use CGI -utf8;
+use Redis;
 $query = new CGI;
-
+$redis = new Redis;
+$log=0;
 #----------------------------------#
 #  2. Print the doctype statement  #
 #----------------------------------#
@@ -28,11 +30,19 @@ print $query->header;
 print $query->start_html('My first form CGI');
 
 #------------------------------------------------------------#
-#  4.  If the program is called without any params, print   #
-#       My dirst form CGI.                             #
+#  4.  If the the password is equal at the password Redis, print   #
+#       My first form CGI, else invalid password.                             #
 #------------------------------------------------------------#
-
-if (!$query->param) {
+if ($query->param('the_password')) {
+            $yourPassword = $query->param('the_password');
+            if($yourPassword eq $redis->get("pass")) {
+               $log=1;
+            }
+            else {
+              print $query->h3('password incorrecta');
+            
+            }
+}if($log){
 	print $query->start_form;
 	print $query->h3('Personal data');
 	print $query->label('Nombre: ');
@@ -53,6 +63,10 @@ if (!$query->param) {
 			-maxlength=>60);
 	print $query->br;
 	print $query->br;
+	print $query->label('Password: ');
+	print $query->password_field(-name=>'yourPassword',
+                -size=>9,
+                -maxlength=>50);
 	print $query->h3('Indica tu edad');
 	print $query->radio_group(
         -name     => 'Checkbox',
@@ -96,16 +110,11 @@ close F;
 	print $query->br;
 	print $query->submit(-value=>'Submit your Formulary');
 	print $query->end_form;
-
-} else {
-
-	#----------------------------------------------------------#
-	#  4b.  If the program is called with parameters, retrieve #
-	#  the 'hobbies' parameter, assign it to an array        #
-	#  named $hobbies, then print the array with each        #
-	#  name separated by a <BR> tag.                           #
-	#----------------------------------------------------------#
-
+}
+#-------------------------------------------------------------#
+# 5. if the program have params, print favorite(s) hobbies #
+#-------------------------------------------------------------#
+if($query->param){
 	print $query->h3('your favorites hobbies are:');
 	@Hobbies = $query->param('hobbies');
 	print "<BLOCKQUOTE>\n";
@@ -113,15 +122,18 @@ close F;
 		print "$hobbies<br>";
 	}
 	print "</BLOCKQUOTE>\n";
-
 }
-
-#--------------------------------------------------#
-#  5. After either case above, end the HTML page.  #
-#--------------------------------------------------#
-
+#------------------------------------------------#
+#6. if the program is called whithout any params, print password_field #
+#------------------------------------------------#
+else {
+            print $query->start_form;
+            print $query->password_field(-name=>'the_password',
+                -size=>35,
+                -maxlength=>50);
+            print $query->br;
+            print $query->submit(-value=>'Submit tu password');
+            print $query->end_form;
+}
 print $query->end_html;
-
-	
-
 
