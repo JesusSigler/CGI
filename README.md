@@ -1,8 +1,7 @@
 #
 #PROGRAM: Create form CGI Program
 #
-#Purpose: Desmostrate (1) how to create a form complete in CGI doing
-# 		    so my first program CGI.	
+#Purpose: Desmostrate how to create a form complete in CGI doing so my first program CGI.	
 #
 #	Create by Jesus Sigler.
 #
