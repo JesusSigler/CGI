@@ -84,7 +84,7 @@ if ($query->param('the_password')) {
         -cols  => 60,
         -rows  => 3,
     );
-open F, '/home/alumnando/Hobbies.txt' or die "No se puede abrir:$!";
+open F, '/home/alumnado/Hobbies.txt' or die "No se puede abrir:$!";
 while(<F>){
  chomp;
 push (@Hobbies, $_);
