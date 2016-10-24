@@ -12,7 +12,8 @@
 #  1. Create a new Perl CGI object and Redis #
 #-------------------------------------------#
 
-use CGI -utf8;
+use CGI;
+use utf8;
 use Redis;
 $query = new CGI;
 $redis = new Redis;
@@ -83,7 +84,7 @@ if ($query->param('the_password')) {
         -cols  => 60,
         -rows  => 3,
     );
-open F, '/home/alumnado/Hobbies.txt' or die "No se puede abrir:$!";
+open F, '/home/alumnando/Hobbies.txt' or die "No se puede abrir:$!";
 while(<F>){
  chomp;
 push (@Hobbies, $_);
@@ -114,7 +115,7 @@ close F;
 #-------------------------------------------------------------#
 # 5. if the program have params, print favorite(s) hobbies #
 #-------------------------------------------------------------#
-if($query->param){
+if($query->param('hobbies')){
 	print $query->h3('your favorites hobbies are:');
 	@Hobbies = $query->param('hobbies');
 	print "<BLOCKQUOTE>\n";
@@ -126,7 +127,7 @@ if($query->param){
 #------------------------------------------------#
 #6. if the program is called whithout any params, print password_field #
 #------------------------------------------------#
-else {
+if (!$query->param) {
             print $query->start_form;
             print $query->password_field(-name=>'the_password',
                 -size=>35,
