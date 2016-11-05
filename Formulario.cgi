@@ -13,16 +13,17 @@
 #-------------------------------------------#
 
 use CGI;
-use utf8;
 use Redis;
 $query = new CGI;
 $redis = new Redis;
 $log=0;
+my @Hobbies = fhobbies();
+
 #----------------------------------#
 #  2. Print the doctype statement  #
 #----------------------------------#
 
-print $query->header;
+print $query->header(-charset => 'utf8');
 
 #----------------------------------------------------#
 #  3. Start the HTML doc, and give the page a title  #
@@ -82,16 +83,10 @@ if ($query->param('the_password')) {
         -name  => 'textarea',
         -value => 'Write here...',
         -cols  => 60,
-        -rows  => 3,
-    );
-open F, '/home/alumnado/Hobbies.txt' or die "No se puede abrir:$!";
-while(<F>){
- chomp;
-push (@Hobbies, $_);
+        -rows  => 3,);
 
-}
+    print $query->br;
 
-close F;
 	print $query->h3('Select your favorite hobby(ies): ');
 	print $query->scrolling_list(-name=>'hobbies',
 		-values=>\@Hobbies,
@@ -124,6 +119,7 @@ if($query->param('hobbies')){
 	}
 	print "</BLOCKQUOTE>\n";
 }
+
 #------------------------------------------------#
 #6. if the program is called whithout any params, print password_field #
 #------------------------------------------------#
@@ -138,3 +134,13 @@ if (!$query->param) {
 }
 print $query->end_html;
 
+sub fhobbies() {
+ my @Hobbies;
+ open F, '/tmp/Hobbies.txt' or die "No se puede abrir:$!";
+ while(<F>){
+  chomp;
+  push (@Hobbies, $_);
+ }
+ close F;
+ return @Hobbies;
+}
