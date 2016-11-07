@@ -125,6 +125,7 @@ if($query->param('hobbies')){
 #------------------------------------------------#
 if (!$query->param) {
             print $query->start_form;
+	    print $query->h3('Escribe tu contraseña de Redis: ');
             print $query->password_field(-name=>'the_password',
                 -size=>35,
                 -maxlength=>50);
